@@ -1,10 +1,11 @@
 import openai, os, re
 from openai import OpenAI
+import json
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI()
 
-#上傳檔案到 vector store
+# 上傳檔案到 vector store
 def upload_file(file_paths, my_vector_store):
     file_streams = [open(path, "rb") for path in file_paths]
     print(file_streams)
@@ -21,12 +22,22 @@ def upload_file(file_paths, my_vector_store):
     print("---------file upload success----------")
     return file_batch
 
+def delete_file(file_to_delete, my_vector_store):
+    print(f"id of the file to delete: {file_to_delete}")
+    deleted_vector_store_file = client.beta.vector_stores.files.delete(
+        vector_store_id=my_vector_store.id,
+        file_id=file_to_delete
+    )
+    return deleted_vector_store_file
+
+# 建立 vector store
 def create_vector_store(vector_name):
     new_vector = client.beta.vector_stores.create(
         name=vector_name
     )
     return new_vector
 
+# 由前端上傳檔案
 def upload_file_form_user(file_path):
     vector_store_id = "vs_aNGnuTDnhWzZF7JjzGmfCJ1F"
     my_vector_store = client.beta.vector_stores.retrieve(vector_store_id=vector_store_id)
@@ -45,7 +56,20 @@ def upload_file_form_user(file_path):
     #file = client.files.retrieve("file-rDms4HPiLIw8hNcZZTYcWRnb")
     #print(file.id)
 
-
-#file_path = ["D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\uploads\\2024-工研院-能源資產績效管理知識GPT模型程式委託開發-第1期報告-V2.pdf"]
-
-#upload_file_form_user(file_path)
+def delete_file_from_user(filename):
+    vector_store_id = "vs_aNGnuTDnhWzZF7JjzGmfCJ1F"
+    my_vector_store = client.beta.vector_stores.retrieve(vector_store_id=vector_store_id)
+    print(f"file name received: {filename}")
+    data = []
+    fp = open("D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\fileids.json", "r", encoding="utf-8")
+    data = json.loads(fp.read())
+    index = 0
+    for d in data:
+        if d['file_name'] == filename:
+            delete_vs_file = delete_file(d['file_id'], my_vector_store)
+            print(delete_vs_file)
+            data.pop(index)
+            fp = open("D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\fileids.json", "w", encoding="utf-8")
+            json.dump(data, fp, ensure_ascii=False, indent=4)
+            break
+        index = index + 1
