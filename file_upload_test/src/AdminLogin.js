@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 function AdminLogin() {
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
-  const [responseMessage, setResponseMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -24,12 +23,11 @@ function AdminLogin() {
         password: password,
       });
 
-      // 設置回應訊息
-      setResponseMessage(response.data.message);
+      alert(response.data.message);
       goToViewFiles();
     } catch (error) {
       console.error('提交表單出錯：', error);
-      setResponseMessage('表單提交失敗');
+      alert(error.response.data.error);
     }
   };
 
@@ -59,7 +57,6 @@ function AdminLogin() {
                 <br/>
                 <button type="submit">登入</button>
             </form>
-            {responseMessage && <p>{responseMessage}</p>}
         </div>
     );
 }

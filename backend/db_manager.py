@@ -7,7 +7,9 @@ mydb = client['admin_data']
 mycol = mydb['admin_account']
 
 # Generate encryption key
-key = Fernet.generate_key()
+#key = Fernet.generate_key()
+f = open('D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\key.txt', 'r')
+key = f.read()
 cipher_suite = Fernet(key)
 
 # Custom encryption function, encrypt in byte

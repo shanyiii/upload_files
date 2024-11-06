@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function AdminRegister() {
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
-  const [responseMessage, setResponseMessage] = useState('');
+
+  const navigate = useNavigate();
+
+  // 跳轉到 /adminLogin 頁面
+  const goToAdminLogin = () => {
+    navigate('/');
+  };
 
   // 表單提交處理函數
   const handleSubmit = async (event) => {
@@ -16,11 +23,11 @@ function AdminRegister() {
         password: password,
       });
 
-      // 設置回應訊息
-      setResponseMessage(response.data.message);
+      alert(response.data.message);
+      goToAdminLogin();
     } catch (error) {
       console.error('提交表單出錯：', error);
-      setResponseMessage('表單提交失敗');
+      alert(error.response.data.error);
     }
   };
 
@@ -50,7 +57,6 @@ function AdminRegister() {
                 <br/>
                 <button type="submit">申請</button>
             </form>
-            {responseMessage && <p>{responseMessage}</p>}
         </div>
     );
 }

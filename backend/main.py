@@ -86,6 +86,7 @@ def admin_login():
     else:
         password = decrypt(admin_data['password'])
         if password != input_password:
+            print(f"password incorrect, input password: {input_password}, correct: {password}")
             return jsonify({"error": "密碼錯誤"}), 400
         else:
             return jsonify({"message": "登入成功"}), 200
@@ -94,15 +95,19 @@ def admin_login():
 @app.route('/admin/register', methods=['POST'])
 def new_admin():
     data = request.get_json()
-    account = data.get('account')
-    pwd = data.get('password')
+    input_account = data.get('account')
+    input_password = data.get('password')
 
-    if not account or not pwd:
+    if not input_account or not input_password:
         return jsonify({"error": "請填入管理員帳號及密碼"}), 400
     
+    admin_data = find_data({'account': input_account})
+    if admin_data != None:
+        return jsonify({"error": "不得註冊已存在的帳號"}), 400
+
     admin = dict()
-    admin['account'] = account
-    admin['password'] = encrypt(pwd)
+    admin['account'] = input_account
+    admin['password'] = encrypt(input_password)
     store_to_db(admin)
 
     return jsonify({"message": "成功新增管理員"}), 200
