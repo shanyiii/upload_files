@@ -23,6 +23,8 @@ function AdminLogin() {
         password: password,
       });
 
+      sessionStorage.setItem('admin_account', account);
+
       alert(response.data.message);
       goToViewFiles();
     } catch (error) {
