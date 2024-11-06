@@ -8,7 +8,7 @@ function ViewFiles() {
   const navigate = useNavigate();
 
   const goToFileUpload = () => {
-    navigate('/');
+    navigate('/fileUpload');
   };
 
   useEffect(() => {

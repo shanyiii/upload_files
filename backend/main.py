@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from file_upload import upload_file_form_user, delete_file_from_user
+from db_manager import encrypt, decrypt, store_to_db, find_data
 import os
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ UPLOAD_FOLDER = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# 上傳文件 API
+# 上傳文件
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -35,7 +36,7 @@ def upload_file():
 FILES_FOLDER = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\uploads'
 app.config['FILES_FOLDER'] = FILES_FOLDER
 
-# API：取得資料夾中的檔案清單
+# 取得資料夾中的檔案清單
 @app.route('/api/files', methods=['GET'])
 def list_files():
     try:
@@ -45,7 +46,7 @@ def list_files():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# API：取得指定檔案
+# 取得指定檔案
 @app.route('/files/<filename>', methods=['GET'])
 def get_file(filename):
     try:
@@ -66,8 +67,45 @@ def process_file():
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     os.remove(file_path)
 
-    # 回傳結果
     return jsonify({"message": f"File {filename} processed successfully"}), 200
+
+# 管理員登入
+@app.route('/admin/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    input_account = data.get('account')
+    input_password = data.get('password')
+    
+    # 任一格輸入為空白
+    if not input_account or not input_password:
+        return jsonify({"error": "請填入管理員帳號及密碼"}), 400
+    
+    admin_data = find_data({'account': input_account})
+    if admin_data == None:
+        return jsonify({"error": "找不到帳號"}), 400
+    else:
+        password = decrypt(admin_data['password'])
+        if password != input_password:
+            return jsonify({"error": "密碼錯誤"}), 400
+        else:
+            return jsonify({"message": "登入成功"}), 200
+
+# 新增管理員帳號
+@app.route('/admin/register', methods=['POST'])
+def new_admin():
+    data = request.get_json()
+    account = data.get('account')
+    pwd = data.get('password')
+
+    if not account or not pwd:
+        return jsonify({"error": "請填入管理員帳號及密碼"}), 400
+    
+    admin = dict()
+    admin['account'] = account
+    admin['password'] = encrypt(pwd)
+    store_to_db(admin)
+
+    return jsonify({"message": "成功新增管理員"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

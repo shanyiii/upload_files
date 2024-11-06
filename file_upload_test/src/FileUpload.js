@@ -9,7 +9,7 @@ function FileUpload() {
 
   // 跳轉到 /viewfiles 頁面
   const goToViewFiles = () => {
-    navigate('/viewfiles');
+    navigate('/viewFiles');
   };
 
   // 處理文件選擇
