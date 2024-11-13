@@ -22,12 +22,14 @@ def upload_file(file_paths, my_vector_store):
     print("---------file upload success----------")
     return file_batch
 
+# 刪除指定檔案
 def delete_file(file_to_delete, my_vector_store):
     print(f"id of the file to delete: {file_to_delete}")
-    deleted_vector_store_file = client.beta.vector_stores.files.delete(
-        vector_store_id=my_vector_store.id,
-        file_id=file_to_delete
-    )
+    deleted_vector_store_file = client.files.delete(file_to_delete)
+    # deleted_vector_store_file = client.beta.vector_stores.files.delete(
+    #     vector_store_id=my_vector_store.id,
+    #     file_id=file_to_delete
+    # )
     return deleted_vector_store_file
 
 # 建立 vector store
@@ -46,8 +48,6 @@ def upload_file_form_user(file_path):
     file_paths = list()
     file_paths.append(file_path)
 
-    #print(f"----file path: {file_path}")
-
     #上傳檔案
     file_batch = upload_file(file_paths, my_vector_store)
     print(file_batch.status)
@@ -56,20 +56,29 @@ def upload_file_form_user(file_path):
     #file = client.files.retrieve("file-rDms4HPiLIw8hNcZZTYcWRnb")
     #print(file.id)
 
+SEVER_FILES_FOLDER = "D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\fileids.json"
+# SEVER_FILES_FOLDER = 'C:\\Users\\shaua\\Desktop\\mine\\POXA-admin\\upload_files\\backend\\fileids.json'
+
+# 使用者刪除指定檔案
 def delete_file_from_user(filename):
     vector_store_id = "vs_aNGnuTDnhWzZF7JjzGmfCJ1F"
     my_vector_store = client.beta.vector_stores.retrieve(vector_store_id=vector_store_id)
     print(f"file name received: {filename}")
+
     data = []
-    fp = open("D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\fileids.json", "r", encoding="utf-8")
+    fp = open(SEVER_FILES_FOLDER, "r", encoding="utf-8")
     data = json.loads(fp.read())
     index = 0
+
     for d in data:
         if d['file_name'] == filename:
+            # 刪除 Open AI 的檔案
             delete_vs_file = delete_file(d['file_id'], my_vector_store)
             print(delete_vs_file)
+
+            # 刪除伺服器端本地檔案
             data.pop(index)
-            fp = open("D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\fileids.json", "w", encoding="utf-8")
+            fp = open(SEVER_FILES_FOLDER, "w", encoding="utf-8")
             json.dump(data, fp, ensure_ascii=False, indent=4)
             break
         index = index + 1

@@ -5,11 +5,11 @@ from db_manager import encrypt, decrypt, store_to_db, find_data
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True, origins="http://localhost:3000")
 
 # 設定上傳的文件儲存路徑
-#UPLOAD_FOLDER = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\uploads'
-UPLOAD_FOLDER = 'C:\\Users\\shaua\\Desktop\\mine\\POXA-admin\\upload_files\\backend\\uploads'
+UPLOAD_FOLDER = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\uploads'
+#UPLOAD_FOLDER = 'C:\\Users\\shaua\\Desktop\\mine\\POXA-admin\\upload_files\\backend\\uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
@@ -34,8 +34,8 @@ def upload_file():
     return jsonify({"message": "文件上傳成功", "file_path": file_path}), 200
 
 # 設定本地端檔案資料夾
-#FILES_FOLDER = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\uploads'
-FILES_FOLDER = 'C:\\Users\\shaua\\Desktop\\mine\\POXA-admin\\upload_files\\backend\\uploads'
+FILES_FOLDER = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\uploads'
+#FILES_FOLDER = 'C:\\Users\\shaua\\Desktop\\mine\\POXA-admin\\upload_files\\backend\\uploads'
 app.config['FILES_FOLDER'] = FILES_FOLDER
 
 # 取得資料夾中的檔案清單
@@ -44,7 +44,9 @@ def list_files():
     try:
         # 確保資料夾存在
         files = os.listdir(app.config['FILES_FOLDER'])
-        return jsonify(files), 200
+        print(f"總共有 {len(files)} 個檔案")
+        return jsonify({"files": files, "numberOfFiles": len(files)}), 200
+        # return jsonify(files), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
