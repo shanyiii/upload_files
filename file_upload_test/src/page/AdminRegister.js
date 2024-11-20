@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from "axios";
+import styles from './AdminLogin.module.css';
 import { useNavigate } from 'react-router-dom';
 
 function AdminRegister() {
@@ -32,11 +33,11 @@ function AdminRegister() {
   };
 
   return (
-        <div>
-          <h1>新增管理員</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>帳號：</label>
+        <div className={styles.container}>
+            <form className={styles.login} onSubmit={handleSubmit}>
+              <h2>新增管理員</h2>
+                <div className={styles.formGroup}>
+                    <label>帳號</label>
                     <input 
                         type="text" 
                         value={account} 
@@ -45,8 +46,8 @@ function AdminRegister() {
                     />
                 </div>
                 <br/>
-                <div>
-                    <label>密碼：</label>
+                <div className={styles.formGroup}>
+                    <label>密碼</label>
                     <input 
                         type="password" 
                         value={password} 
@@ -55,7 +56,7 @@ function AdminRegister() {
                     />
                 </div>
                 <br/>
-                <button type="submit">申請</button>
+                <button className={styles.btn} type="submit">申請</button>
             </form>
         </div>
     );

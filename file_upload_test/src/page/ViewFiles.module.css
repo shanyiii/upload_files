@@ -1,0 +1,204 @@
+/* 頂端導航器 */
+.topBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #8da3f3;
+    color: white;
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    justify-content: space-between;
+    padding: 0 20px; /* 左右內邊距 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.topBar p {
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.topBar button {
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.registerButton {
+    margin-right: 15px;
+    background-color: #4CAF50;
+}
+
+.registerButton:hover {
+    background-color: #409645;
+}
+
+.logoutButton {
+    margin-right: 30px;
+    background-color: #ff5c5c;
+
+}
+
+.logoutButton:hover {
+    background-color: #d9534f;
+}
+
+.content {
+    margin-top: 50px;
+    padding: 20px;
+  }
+
+/* 上傳檔案容器 */
+.uploadContainer {
+    border: 2px dashed #cccccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.uploadContainer:hover {
+    background-color: #e9e9e9;
+    border-color: #aaaaaa;
+}
+
+.uploadButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px; /* 與其他元素分隔 */
+    transition: background-color 0.3s ease;
+}
+
+.uploadButton:hover {
+    background-color: #409645;
+}
+
+.uploadProgress {
+    margin-top: 15px; /* 與按鈕分隔 */
+    font-size: 14px;
+    color: #555;
+}
+
+/* 隱藏原生的 file input */
+.hiddenFileInput {
+    display: none; /* 隱藏原始按鈕 */
+}
+
+/* 自定義選擇檔案按鈕 */
+.customFileButton {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    display: inline-block; /* 讓按鈕像塊狀元素 */
+    transition: background-color 0.3s ease;
+}
+
+.customFileButton:hover {
+    background-color: #1976D2;
+}
+
+/* 圖標文字的對齊選擇 (可選) */
+.customFileButton:before {
+    content: "📁 "; /* 添加文件圖標 */
+    font-size: 16px;
+    vertical-align: middle;
+}
+  
+
+/* 表格容器 */
+.tableContainer {
+    max-height: 300px;
+    overflow-y: auto; /* 垂直方向顯示滾動條 */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/* 自定義滾動條樣式 (僅適用於支持的瀏覽器) */
+.tableContainer::-webkit-scrollbar {
+    width: 8px; /* 滾動條寬度 */
+}
+
+.tableContainer::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 滾動條軌道背景 */
+    border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+    background: #888; /* 滾動條顏色 */
+    border-radius: 4px; /* 滾動條圓角 */
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 滾動條懸停顏色 */
+}
+
+/* 底部瀏覽檔案的表格 */
+.fileTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fileTable thead {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+}
+  
+.fileTable th,
+.fileTable td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#number {
+    text-align: center;
+}
+
+.fileTable th {
+    background-color: #8da3f3;
+    font-weight: bold;
+    color: white;
+}
+
+.fileTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.fileTable tr:hover {
+    background-color: #e9e9e9;
+}
+
+.fileTable button {
+    background-color: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.fileTable button:hover {
+    background-color: #d9534f;
+}
+  

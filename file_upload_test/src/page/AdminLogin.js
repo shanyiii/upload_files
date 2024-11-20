@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import styles from './AdminLogin.module.css';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
@@ -9,11 +10,6 @@ function AdminLogin() {
   const { user, setUser } = useContext(UserContext);
 
   const navigate = useNavigate();
-
-  // 跳轉到 /viewfiles 頁面
-  const goToViewFiles = () => {
-    navigate('/viewFiles');
-  };
 
   // 表單提交處理函數
   const handleSubmit = async (event) => {
@@ -43,30 +39,30 @@ function AdminLogin() {
   }, [user.isLogin, navigate]); // 當 user.isLogin 或 navigate 改變時觸發
 
   return (
-        <div>
-            <h1>管理員登入</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>帳號：</label>
-                    <input 
-                        type="text" 
-                        value={account} 
-                        onChange={(e) => setAccount(e.target.value)} 
-                        required 
-                    />
-                </div>
-                <br/>
-                <div>
-                    <label>密碼：</label>
-                    <input 
-                        type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
-                    />
-                </div>
-                <br/>
-                <button type="submit">登入</button>
+        <div className={styles.container}>
+            <form className={styles.login} onSubmit={handleSubmit}>
+              <h2>管理員登入</h2>
+              <div className={styles.formGroup}>
+                <label>帳號</label>
+                <input 
+                    type="text" 
+                    value={account} 
+                    onChange={(e) => setAccount(e.target.value)} 
+                    required 
+                />
+              </div>
+              <br/>
+              <div className={styles.formGroup}>
+                <label>密碼</label>
+                <input 
+                    type="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    required 
+                />
+              </div>
+              <br/>
+              <button className={styles.btn} type="submit">登入</button>
             </form>
         </div>
     );

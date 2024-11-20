@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import styles from './ViewFiles.module.css';
 import { UserContext } from '../context/UserContext';
 
 function ViewFiles() {
@@ -98,29 +99,59 @@ function ViewFiles() {
 
   return (
     <div>
-      <p>Hello {user.userName}</p>
-      <button onClick={goToAdminRegister}>新增管理員</button>
-      <button onClick={handleLogout}>登出</button>
-      <h1>上傳本地檔案</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>
-        {isUploading ? "正在上傳..." : "上傳"}
-      </button>
-      {isUploading && <p>上傳進度：{uploadProgress}%</p>}
-      <br/>
-      <br/>
-      <h1>顯示所有檔案</h1>
-      <p>總共 {numberOfFiles} 個檔案</p>
-      <ul>
-        {files.map((file, index) => (
-          <li key={index}>
-            <span>{file}</span>
-            <button onClick={() => handleDeleteFile(file)}>
-              刪除檔案
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.topBar}>
+        <p>Hello {user.userName}</p>
+        <div>
+          <button className={styles.registerButton} onClick={goToAdminRegister}>新增管理員</button>
+          <button className={styles.logoutButton} onClick={handleLogout}>登出</button>          
+        </div>
+      </div>
+      <div className={styles.content}>
+        <div className={styles.uploadContainer}>
+          <h1>上傳本地檔案</h1>
+          <label htmlFor="fileInput" className={styles.customFileButton}>
+            選擇檔案
+          </label>
+          <input
+            id="fileInput"
+            type="file"
+            onChange={handleFileChange}
+            className={styles.hiddenFileInput}
+          />
+          <p>{selectedFile ? selectedFile.name : "尚未選擇檔案"}</p>
+          <button onClick={handleUpload} className={styles.uploadButton}>
+            {isUploading ? "正在上傳..." : "上傳"}
+          </button>
+          {isUploading && <p className={styles.uploadProgress}>上傳進度：{uploadProgress}%</p>}          
+        </div>
+        <br/>
+        <br/>
+        <p>總共 {numberOfFiles} 個檔案</p>
+        <div className={styles.tableContainer}>
+          <table className={styles.fileTable}>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>檔案名稱</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {files.map((file, index) => (
+                <tr key={index}>
+                  <td id={styles.number}>{index + 1}</td>
+                  <td>{file}</td>
+                  <td>
+                    <button onClick={() => handleDeleteFile(file)}>刪除檔案</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>           
+        </div>
+       
+      </div>
+
     </div>
   );
 }
