@@ -3,17 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ViewFiles.module.css';
 import { UserContext } from '../context/UserContext';
+import { InfoModal } from './InfoModal';
+import information from '../information.png';
 
 function ViewFiles() {
   const [files, setFiles] = useState([]);
   const [numberOfFiles, setNumberOfFiles] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [sizeOfFiles, setSizeOfFiles] = useState(0.0);
   const { user, setUser } = useContext(UserContext);
 
   const [isUploading, setIsUploading] = useState(false); // 上傳狀態
   const [uploadProgress, setUploadProgress] = useState(0); // 上傳進度
+  const [infoShow, setInfoShow] = useState(false); // 資訊欄
 
   const navigate = useNavigate();
+
+  const handleOpenInfo = () => setInfoShow(true);
+  const handleCloseInfo = () => setInfoShow(false);
 
   // 跳轉到登入頁面
   const goToAdminRegister = () => {
@@ -23,9 +30,10 @@ function ViewFiles() {
   useEffect(() => {
     axios.get('http://localhost:5000/api/files')
       .then(response => {
-        // console.log(response.data);
+        console.log(response.data);
         setFiles(response.data.files);
         setNumberOfFiles(response.data.numberOfFiles);
+        setSizeOfFiles(response.data.size);
       })
       .catch(error => console.error('無法獲取檔案清單：', error));
   }, []);
@@ -126,7 +134,13 @@ function ViewFiles() {
         </div>
         <br/>
         <br/>
-        <p>總共 {numberOfFiles} 個檔案</p>
+        <img src={information} width='20px' alt='information' onClick={handleOpenInfo}></img>
+        <InfoModal
+          show={infoShow}
+          onClose={handleCloseInfo}
+        />
+        <p>檔案數量：{numberOfFiles}/10000 個</p>
+        <p>檔案總大小：{sizeOfFiles} MB</p>
         <div className={styles.tableContainer}>
           <table className={styles.fileTable}>
             <thead>

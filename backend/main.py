@@ -41,11 +41,18 @@ app.config['FILES_FOLDER'] = FILES_FOLDER
 # 取得資料夾中的檔案清單
 @app.route('/api/files', methods=['GET'])
 def list_files():
+    total_size = 0
     try:
         # 確保資料夾存在
         files = os.listdir(app.config['FILES_FOLDER'])
-        print(f"總共有 {len(files)} 個檔案")
-        return jsonify({"files": files, "numberOfFiles": len(files)}), 200
+        # print(f"總共有 {len(files)} 個檔案")
+        for f in files:
+            path = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend\\uploads\\' + f
+            total_size = total_size + os.path.getsize(path)
+        total_size = total_size * 0.00000095367432  # 轉為二進位制的 MB
+        total_size = round(total_size, 2)
+        print(total_size)
+        return jsonify({"files": files, "numberOfFiles": len(files), "size": total_size}), 200
         # return jsonify(files), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
