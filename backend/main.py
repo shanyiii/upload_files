@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from file_upload import upload_file_form_user, delete_file_from_user
 from db_manager import encrypt, decrypt, store_to_db, find_data
+from quickStart import setup_gdrive, upload_file_to_gdrive, delete_file_from_gdrive
 import os
 
 app = Flask(__name__)
@@ -12,6 +13,8 @@ UPLOAD_FOLDER = 'D:\\master_stuff\\POXA_chatbot\\admin_test\\admin_test\\backend
 #UPLOAD_FOLDER = 'C:\\Users\\shaua\\Desktop\\mine\\POXA-admin\\upload_files\\backend\\uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+setup_gdrive()
 
 # 上傳文件
 @app.route('/upload', methods=['POST'])
@@ -29,7 +32,12 @@ def upload_file():
     file.save(file_path)
     print(f"file name: {file.filename}\nfile path: {file_path}")
 
-    upload_file_form_user(file_path)
+    # 上傳文件到 open ai vector store
+    upload_file_form_user(file_path, file.filename)
+
+    # 上傳文件到 google drive
+    gdrive_folder_id = "1Qc1O5pC7f3ZHvuj2WVad1TFWtuTZvW1p"
+    upload_file_to_gdrive(file.filename, file_path, gdrive_folder_id)
 
     return jsonify({"message": "文件上傳成功", "file_path": file_path}), 200
 
@@ -75,6 +83,7 @@ def process_file():
         return jsonify({"error": "Filename is required"}), 400
 
     delete_file_from_user(filename)
+    delete_file_from_gdrive(filename)
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     os.remove(file_path)
 
