@@ -13,6 +13,7 @@ from googleapiclient.http import MediaFileUpload
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive']
 GDRIVE_LIST_PATH = "D:\master_stuff\POXA_chatbot\\admin_test\\admin_test\\backend\google_drive_list.json"
+FILE_AND_LINK = "D:\master_stuff\POXA_chatbot\pdftest\POXA-backend-\gdrive_file_links.json"
 
 def upload_file_to_gdrive(file_name, file_path, folder_id):
   """Upload a file to the specified folder and prints file ID, folder ID
@@ -36,15 +37,37 @@ def upload_file_to_gdrive(file_name, file_path, folder_id):
     data = list()
     fp = open(GDRIVE_LIST_PATH, "r", encoding="utf-8")
     data = json.loads(fp.read())
+    fileid = file.get("id")
     d = {
       "file_name": file_name,
-      "file_id": file.get("id")
+      "file_id": fileid
     }
     data.append(d)
     fp = open(GDRIVE_LIST_PATH, "w", encoding="utf-8")
     json.dump(data, fp, ensure_ascii=False, indent=4)
     
-    return file.get("id")
+    permission = {
+      "type": "anyone",  # 任何人
+      "role": "reader",  # 只讀權限（可改為 "writer" 讓任何人可編輯）
+    }
+
+    service.permissions().create(fileId=fileid, body=permission).execute()
+
+    # 取得分享連結
+    file_info = service.files().get(fileId=fileid, fields="webViewLink").execute()
+    print(f"分享連結: {file_info['webViewLink']}")
+
+    fp = open(FILE_AND_LINK, "r", encoding="utf-8")
+    links = json.loads(fp.read())
+    file_link = {
+      "file_name": file_name,
+      "file_link": file_info['webViewLink']
+    }
+    links.append(file_link)
+    fp = open(FILE_AND_LINK, "w", encoding="utf-8")
+    json.dump(links, fp, ensure_ascii=False, indent=4)    
+
+    return fileid
 
   except HttpError as error:
     print(f"An error occurred: {error}")

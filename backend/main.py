@@ -33,7 +33,7 @@ def upload_file():
     print(f"file name: {file.filename}\nfile path: {file_path}")
 
     # 上傳文件到 open ai vector store
-    upload_file_form_user(file_path, file.filename)
+    # upload_file_form_user(file_path, file.filename)
 
     # 上傳文件到 google drive
     gdrive_folder_id = "1Qc1O5pC7f3ZHvuj2WVad1TFWtuTZvW1p"
