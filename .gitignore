@@ -58,10 +58,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-node_modules/
-
-
-
 
 
 # Node modules
@@ -93,3 +89,6 @@ jspm_packages/
 # Windows
 Thumbs.db
 ehthumbs.db
+
+# oAuth2 credentials
+credentials.json
